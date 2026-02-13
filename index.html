@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-title" content="MSC Risk">
 <meta name="theme-color" content="#0a0a0b">
 <title>UC-MSC Risk Stratification</title>
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSIjMGEwYTBiIi8+PHRleHQgeD0iOTAiIHk9IjExNSIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2VmNDQ0NCI+4pqVPC90ZXh0Pjwvc3ZnPg==">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,7 +15,6 @@
   :root {
     --bg: #0a0a0b;
     --surface: rgba(255,255,255,0.02);
-    --surface-hover: rgba(255,255,255,0.05);
     --border: rgba(255,255,255,0.06);
     --border-active: rgba(255,255,255,0.2);
     --text: rgba(255,255,255,0.88);
@@ -24,19 +22,14 @@
     --text-dimmer: rgba(255,255,255,0.25);
     --red: #ef4444;
     --red-light: #fca5a5;
-    --red-bg: rgba(239,68,68,0.15);
     --yellow: #f59e0b;
     --yellow-light: #fcd34d;
-    --yellow-bg: rgba(245,158,11,0.15);
     --green: #22c55e;
     --green-light: #86efac;
-    --green-bg: rgba(34,197,94,0.15);
     --blue: #60a5fa;
     --blue-light: #93c5fd;
-    --blue-bg: rgba(96,165,250,0.15);
     --purple: #a78bfa;
     --purple-light: #c4b5fd;
-    --purple-bg: rgba(167,139,250,0.15);
     --safe-top: env(safe-area-inset-top);
     --safe-bottom: env(safe-area-inset-bottom);
     --font: 'DM Sans', -apple-system, sans-serif;
@@ -58,12 +51,10 @@
     padding-bottom: var(--safe-bottom);
   }
 
-  /* Header */
   .header {
     background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
     border-bottom: 1px solid var(--border);
     padding: 16px 20px 14px;
-    position: relative;
   }
   .header-inner { display: flex; align-items: center; gap: 12px; }
   .header-icon {
@@ -75,7 +66,6 @@
   .header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
   .header-sub { font-size: 11px; color: var(--text-dim); font-family: var(--mono); margin-top: 2px; }
 
-  /* Navigation Tabs */
   .nav-tabs {
     display: flex; gap: 2px; padding: 12px 20px 0;
     border-bottom: 1px solid var(--border);
@@ -84,25 +74,21 @@
   }
   .nav-tabs::-webkit-scrollbar { display: none; }
   .nav-tab {
-    padding: 10px 16px; font-size: 13px; font-weight: 600;
+    padding: 10px 14px; font-size: 13px; font-weight: 600;
     color: var(--text-dim); background: none; border: none;
     border-bottom: 2px solid transparent;
     cursor: pointer; white-space: nowrap; font-family: var(--font);
-    transition: all 0.15s ease;
-    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s ease; -webkit-tap-highlight-color: transparent;
   }
   .nav-tab.active { color: #fff; border-bottom-color: var(--red); }
 
-  /* Content */
-  .content { padding: 16px 20px 120px; max-width: 600px; margin: 0 auto; }
+  .content { padding: 16px 20px 140px; max-width: 600px; margin: 0 auto; }
 
-  /* Risk Display - Sticky */
   .risk-display {
     border-radius: 14px; padding: 18px;
     position: sticky; top: 0; z-index: 20;
     backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-    transition: all 0.3s ease;
-    margin-bottom: 16px;
+    transition: all 0.3s ease; margin-bottom: 16px;
   }
   .risk-display.low { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); }
   .risk-display.moderate { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); }
@@ -126,38 +112,29 @@
   .contra-banner .title { font-size: 18px; font-weight: 700; color: var(--red); font-family: var(--mono); letter-spacing: 0.05em; }
   .contra-banner .desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 6px; }
 
-  /* Scale bar */
   .scale-bar { display: flex; gap: 3px; margin-bottom: 16px; border-radius: 8px; overflow: hidden; }
-  .scale-item {
-    flex: 1; padding: 8px 4px; text-align: center; transition: all 0.2s ease;
-    background: var(--surface);
-  }
+  .scale-item { flex: 1; padding: 8px 4px; text-align: center; transition: all 0.2s ease; background: var(--surface); }
   .scale-item.active-low { background: rgba(34,197,94,0.12); border-bottom: 2px solid var(--green); }
   .scale-item.active-mod { background: rgba(245,158,11,0.12); border-bottom: 2px solid var(--yellow); }
   .scale-item.active-high { background: rgba(239,68,68,0.12); border-bottom: 2px solid var(--red); }
   .scale-label { font-size: 10px; font-weight: 700; font-family: var(--mono); letter-spacing: 0.05em; }
   .scale-range { font-size: 9px; color: var(--text-dimmer); font-family: var(--mono); }
 
-  /* Sections */
   .section { margin-bottom: 20px; }
   .section-header {
     display: flex; align-items: center; gap: 10px;
-    padding-bottom: 8px; border-bottom: 1px solid var(--border);
-    margin-bottom: 8px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px;
   }
   .section-bar { width: 3px; height: 16px; border-radius: 2px; }
   .section-title { font-size: 11px; font-weight: 700; color: var(--text-dim); font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
   .section-pts { font-size: 10px; color: var(--text-dimmer); font-family: var(--mono); }
 
-  /* Check items */
   .check-item {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 14px; margin-bottom: 3px;
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; cursor: pointer;
-    transition: all 0.12s ease;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none; -webkit-user-select: none;
+    border-radius: 10px; cursor: pointer; transition: all 0.12s ease;
+    -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
   }
   .check-item:active { transform: scale(0.98); }
   .check-item.checked { background: rgba(255,255,255,0.06); border-color: var(--border-active); }
@@ -165,8 +142,7 @@
   .check-box {
     width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
-    font-size: 13px; color: #fff; font-weight: 700;
-    transition: all 0.12s ease;
+    font-size: 13px; color: #fff; font-weight: 700; transition: all 0.12s ease;
   }
   .check-box.unchecked { border: 2px solid rgba(255,255,255,0.2); background: transparent; }
   .check-box.high { background: var(--red); }
@@ -177,15 +153,13 @@
   .check-label { color: var(--text); font-size: 14px; line-height: 1.4; flex: 1; }
   
   .check-pts {
-    font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
-    font-family: var(--mono); flex-shrink: 0;
+    font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-family: var(--mono); flex-shrink: 0;
   }
   .check-pts.high { background: rgba(239,68,68,0.15); color: var(--red-light); }
   .check-pts.mod { background: rgba(245,158,11,0.15); color: var(--yellow-light); }
   .check-pts.low { background: rgba(96,165,250,0.15); color: var(--blue-light); }
   .check-pts.proc { background: rgba(167,139,250,0.15); color: var(--purple-light); }
 
-  /* Contraindication item */
   .contra-item {
     display: flex; align-items: center; gap: 12px;
     padding: 14px; margin-bottom: 3px;
@@ -194,7 +168,7 @@
     -webkit-tap-highlight-color: transparent; user-select: none;
   }
   .contra-item:active { transform: scale(0.98); }
-  .contra-item.checked { background: var(--red-bg); border: 2px solid var(--red); }
+  .contra-item.checked { background: rgba(239,68,68,0.15); border: 2px solid var(--red); }
   .contra-circle {
     width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
@@ -209,7 +183,6 @@
     letter-spacing: 0.06em; font-family: var(--mono);
   }
 
-  /* Test cases */
   .test-section {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 12px; padding: 14px; margin-bottom: 16px;
@@ -230,7 +203,58 @@
     border-radius: 8px; font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6;
   }
 
-  /* Results tab */
+  .patient-input-row {
+    display: flex; gap: 8px; margin-bottom: 16px; align-items: center;
+  }
+  .patient-input-row label {
+    font-size: 12px; color: var(--text-dim); font-family: var(--mono); white-space: nowrap; font-weight: 600;
+  }
+  .patient-input {
+    flex: 1; padding: 10px 14px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: #fff; font-size: 14px; font-family: var(--font);
+    outline: none; transition: border-color 0.15s;
+  }
+  .patient-input:focus { border-color: var(--border-active); }
+  .patient-input::placeholder { color: var(--text-dimmer); }
+
+  .save-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(10,10,11,0.92); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    border-top: 1px solid var(--border);
+    padding: 12px 20px calc(12px + var(--safe-bottom));
+    z-index: 50; display: flex; gap: 10px; align-items: center;
+  }
+  .save-btn {
+    flex: 1; padding: 14px; border-radius: 12px; font-size: 15px; font-weight: 700;
+    border: none; cursor: pointer; font-family: var(--font);
+    transition: all 0.15s ease; -webkit-tap-highlight-color: transparent;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .save-btn:active { transform: scale(0.97); }
+  .save-btn.primary {
+    background: linear-gradient(135deg, var(--red), #dc2626);
+    color: #fff;
+  }
+  .save-btn.primary:disabled {
+    background: rgba(255,255,255,0.08); color: var(--text-dim); cursor: not-allowed;
+    transform: none;
+  }
+  .save-btn.secondary {
+    background: rgba(255,255,255,0.06); color: var(--text);
+    flex: 0; padding: 14px 18px;
+  }
+
+  .toast {
+    position: fixed; top: calc(20px + var(--safe-top)); left: 50%; transform: translateX(-50%) translateY(-100px);
+    background: rgba(34,197,94,0.95); color: #fff; padding: 12px 24px;
+    border-radius: 12px; font-size: 14px; font-weight: 600; z-index: 200;
+    transition: transform 0.3s ease; pointer-events: none;
+    backdrop-filter: blur(10px); box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.error { background: rgba(239,68,68,0.95); }
+
   .result-card {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 12px; padding: 16px; margin-bottom: 10px;
@@ -244,462 +268,510 @@
   .result-list li::before { content: "•"; color: var(--text-dim); }
   .result-empty { font-size: 13px; color: var(--text-dimmer); font-style: italic; }
 
-  /* Recommendation section */
   .reco-box {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 12px; padding: 16px; margin-top: 16px;
   }
   .reco-title { font-size: 11px; font-weight: 700; color: var(--text-dim); font-family: var(--mono); letter-spacing: 0.08em; margin-bottom: 10px; text-transform: uppercase; }
   .reco-item { font-size: 13px; color: rgba(255,255,255,0.7); padding: 6px 0; line-height: 1.5; display: flex; gap: 8px; }
-  .reco-bullet { flex-shrink: 0; }
 
-  /* Footer */
+  .history-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px; margin-bottom: 8px;
+  }
+  .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .history-id { font-size: 14px; font-weight: 600; }
+  .history-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 8px; font-family: var(--mono); }
+  .history-badge.low { background: rgba(34,197,94,0.15); color: var(--green-light); }
+  .history-badge.moderate { background: rgba(245,158,11,0.15); color: var(--yellow-light); }
+  .history-badge.high { background: rgba(239,68,68,0.15); color: var(--red-light); }
+  .history-badge.contra { background: rgba(239,68,68,0.25); color: var(--red-light); }
+  .history-date { font-size: 11px; color: var(--text-dim); font-family: var(--mono); }
+  .history-factors { font-size: 12px; color: var(--text-dim); margin-top: 4px; line-height: 1.5; }
+  .history-empty { text-align: center; padding: 40px 20px; color: var(--text-dimmer); font-size: 14px; }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 300;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.hidden { display: none; }
+  .modal {
+    background: #141416; border: 1px solid var(--border-active); border-radius: 16px;
+    padding: 24px; max-width: 400px; width: 100%;
+  }
+  .modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .modal p { font-size: 13px; color: var(--text-dim); line-height: 1.6; margin-bottom: 16px; }
+  .modal input {
+    width: 100%; padding: 12px 14px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: #fff; font-size: 14px; font-family: var(--mono);
+    outline: none; margin-bottom: 12px;
+  }
+  .modal input:focus { border-color: var(--border-active); }
+  .modal input::placeholder { color: var(--text-dimmer); }
+  .modal-btns { display: flex; gap: 8px; }
+  .modal-btn {
+    flex: 1; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700;
+    border: none; cursor: pointer; font-family: var(--font); transition: all 0.12s ease;
+  }
+  .modal-btn.primary { background: linear-gradient(135deg, var(--red), #dc2626); color: #fff; }
+  .modal-btn.ghost { background: rgba(255,255,255,0.06); color: var(--text); }
+
+  .setup-steps { margin: 16px 0; }
+  .setup-step {
+    display: flex; gap: 10px; padding: 8px 0; font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5;
+  }
+  .step-num {
+    width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+    background: rgba(239,68,68,0.2); color: var(--red-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; font-family: var(--mono);
+  }
+
   .footer {
     margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--border);
     text-align: center; padding-bottom: 20px;
   }
   .footer p { font-size: 10px; color: var(--text-dimmer); line-height: 1.7; font-family: var(--mono); }
 
-  /* PWA install banner */
-  .install-banner {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: rgba(10,10,11,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border);
-    padding: 14px 20px calc(14px + var(--safe-bottom));
-    display: flex; align-items: center; gap: 12px; z-index: 100;
-  }
-  .install-banner.hidden { display: none; }
-  .install-text { flex: 1; }
-  .install-text strong { font-size: 13px; display: block; }
-  .install-text span { font-size: 11px; color: var(--text-dim); }
-  .install-btn {
-    padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 700;
-    background: linear-gradient(135deg, var(--red), var(--yellow));
-    border: none; color: #fff; cursor: pointer; font-family: var(--font);
-  }
-  .install-dismiss {
-    background: none; border: none; color: var(--text-dim); font-size: 18px; cursor: pointer; padding: 4px;
+  .settings-btn {
+    background: none; border: none; color: var(--text-dim); font-size: 20px;
+    cursor: pointer; padding: 6px; -webkit-tap-highlight-color: transparent;
+    line-height: 1;
   }
 
-  @media (prefers-color-scheme: light) {
-    /* Keeping dark mode only for medical app professionalism */
-  }
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
 <div id="app"></div>
+<div class="toast" id="toast"></div>
+<div class="modal-overlay hidden" id="setupModal"></div>
 
 <script>
-// ============ DATA ============
-const ABSOLUTE_CONTRAINDICATIONS = [
-  { id: "cancer", label: "Cáncer activo" }
+var ABSOLUTE_CONTRAINDICATIONS = [
+  { id: "cancer", label: "Cancer activo" }
 ];
 
-const HIGH_WEIGHT = [
+var HIGH_WEIGHT = [
   { id: "hf_nyha34", label: "Heart Failure (NYHA III-IV)", points: 3 },
-  { id: "ef_low", label: "Fracción de eyección <40%", points: 3 },
+  { id: "ef_low", label: "Fraccion de eyeccion <40%", points: 3 },
   { id: "hta_uncontrolled", label: "HTA no controlada (>160/100)", points: 3 },
   { id: "iam_recent", label: "IAM reciente (<6 meses)", points: 3 },
-  { id: "pulm_htn", label: "Hipertensión pulmonar", points: 3 },
+  { id: "pulm_htn", label: "Hipertension pulmonar", points: 3 },
   { id: "ards_tep", label: "ARDS / TEP previo", points: 3 },
-  { id: "prior_adverse", label: "Reacción adversa previa a MSC", points: 3 }
+  { id: "prior_adverse", label: "Reaccion adversa previa a MSC", points: 3 }
 ];
 
-const MODERATE_WEIGHT = [
-  { id: "ckd", label: "Enfermedad Renal Crónica (cualquier estadio)", points: 2 },
+var MODERATE_WEIGHT = [
+  { id: "ckd", label: "Enfermedad Renal Cronica", points: 2 },
   { id: "copd", label: "EPOC", points: 2 },
   { id: "arrhythmia", label: "Arritmias (FA, ventriculares)", points: 2 },
-  { id: "thrombophilia", label: "Trombofilia / antecedente trombótico", points: 2 },
-  { id: "active_infection", label: "Infección activa o reciente (<2 sem)", points: 2 },
+  { id: "thrombophilia", label: "Trombofilia / antecedente trombotico", points: 2 },
+  { id: "active_infection", label: "Infeccion activa o reciente (<2 sem)", points: 2 },
   { id: "inflam_markers", label: "Marcadores inflamatorios elevados", points: 2 },
   { id: "autoimmune_flare", label: "Autoinmune en flare activo", points: 2 },
   { id: "dm_uncontrolled", label: "Diabetes descontrolada (HbA1c >9%)", points: 2 },
-  { id: "biologics", label: "Medicamentos biológicos activos", points: 2 },
+  { id: "biologics", label: "Medicamentos biologicos activos", points: 2 },
   { id: "anticoagulants", label: "Anticoagulantes activos", points: 2 },
-  { id: "chronic_nsaids", label: "AINEs crónicos", points: 2 }
+  { id: "chronic_nsaids", label: "AINEs cronicos", points: 2 }
 ];
 
-const LOW_WEIGHT = [
-  { id: "age_70", label: "Edad >70 años", points: 1 },
+var LOW_WEIGHT = [
+  { id: "age_70", label: "Edad >70 anos", points: 1 },
   { id: "bmi_35", label: "IMC >35", points: 1 },
   { id: "polypharmacy", label: "Polifarmacia (>5 medicamentos)", points: 1 },
   { id: "smoker", label: "Fumador activo", points: 1 },
   { id: "poor_functional", label: "Pobre estado funcional", points: 1 },
-  { id: "low_cognition", label: "Cognición comprometida (MoCA bajo)", points: 1 },
+  { id: "low_cognition", label: "Cognicion comprometida (MoCA bajo)", points: 1 },
   { id: "wheelchair", label: "Dependencia de silla de ruedas", points: 1 },
-  { id: "needs_assistant", label: "Requiere asistente de clínica", points: 1 }
+  { id: "needs_assistant", label: "Requiere asistente de clinica", points: 1 }
 ];
 
-const PROCEDURE_MODIFIERS = [
-  { id: "route_iv", label: "Vía IV", points: 2 },
-  { id: "dose_200m", label: "Dosis >200M células IV", points: 1 },
-  { id: "fast_infusion", label: "Velocidad de infusión rápida", points: 1 }
+var PROCEDURE_MODIFIERS = [
+  { id: "route_iv", label: "Via IV", points: 2 },
+  { id: "dose_200m", label: "Dosis >200M celulas IV", points: 1 },
+  { id: "fast_infusion", label: "Velocidad de infusion rapida", points: 1 }
 ];
 
-const ALL_SCORED = [...HIGH_WEIGHT, ...MODERATE_WEIGHT, ...LOW_WEIGHT, ...PROCEDURE_MODIFIERS];
+var ALL_SCORED = HIGH_WEIGHT.concat(MODERATE_WEIGHT).concat(LOW_WEIGHT).concat(PROCEDURE_MODIFIERS);
 
-const TEST_CASES = [
-  {
-    name: "Caso Índice — HF + HTA → UCI",
-    desc: "Paciente con heart failure e hipertensión, primera infusión IV 100M UC-MSC. Desarrolló neumonía, ARDS e infarto.",
-    selections: { hf_nyha34: true, hta_uncontrolled: true, route_iv: true, ef_low: true, arrhythmia: true }
-  },
-  {
-    name: "OA rodilla, bajo riesgo",
-    desc: "Mujer 55 años, osteoartritis bilateral, sin comorbilidades. IMC 28. Intraarticular 30M.",
-    selections: {}
-  },
-  {
-    name: "EM + biológicos",
-    desc: "Hombre 42 años, esclerosis múltiple con rituximab. IV 150M + intratecal 10M. Inflamación leve.",
-    selections: { biologics: true, inflam_markers: true, route_iv: true }
-  },
-  {
-    name: "Geriátrico complejo",
-    desc: "Hombre 78 años, DM2 descontrolada, ERC, EPOC, silla de ruedas, MoCA 18, polifarmacia, AINEs. IV 150M.",
-    selections: { age_70: true, dm_uncontrolled: true, ckd: true, copd: true, wheelchair: true, low_cognition: true, polypharmacy: true, chronic_nsaids: true, route_iv: true, poor_functional: true, needs_assistant: true }
-  },
-  {
-    name: "Wellness, mínimo riesgo",
-    desc: "Mujer 38 años, sana, terapia wellness/rejuvenecimiento. IV 150M.",
-    selections: { route_iv: true }
-  }
+var TEST_CASES = [
+  { name: "Caso Indice - HF+HTA", desc: "Paciente con heart failure e hipertension, primera infusion IV 100M UC-MSC. Desarrollo neumonia, ARDS e infarto.", selections: { hf_nyha34:true, hta_uncontrolled:true, route_iv:true, ef_low:true, arrhythmia:true } },
+  { name: "OA rodilla", desc: "Mujer 55 anos, osteoartritis bilateral, sin comorbilidades. Intraarticular 30M.", selections: {} },
+  { name: "EM + biologicos", desc: "Hombre 42 anos, EM con rituximab. IV 150M + intratecal 10M.", selections: { biologics:true, inflam_markers:true, route_iv:true } },
+  { name: "Geriatrico complejo", desc: "Hombre 78 anos, DM2, ERC, EPOC, silla de ruedas, MoCA bajo, polifarmacia, AINEs. IV 150M.", selections: { age_70:true, dm_uncontrolled:true, ckd:true, copd:true, wheelchair:true, low_cognition:true, polypharmacy:true, chronic_nsaids:true, route_iv:true, poor_functional:true, needs_assistant:true } },
+  { name: "Wellness", desc: "Mujer 38 anos, sana, wellness. IV 150M.", selections: { route_iv:true } }
 ];
 
-// ============ STATE ============
-let state = {
+var state = {
   selections: {},
   contraindications: {},
-  activeTab: 'calculator', // calculator | results
-  activeTest: null
+  activeTab: "calculator",
+  activeTest: null,
+  patientId: "",
+  saving: false,
+  history: JSON.parse(localStorage.getItem("msc_history") || "[]")
 };
 
+var SHEETS_URL_KEY = "msc_sheets_url";
+function getSheetsUrl() { return localStorage.getItem(SHEETS_URL_KEY) || ""; }
+function setSheetsUrl(url) { localStorage.setItem(SHEETS_URL_KEY, url); }
+
 function getRiskInfo(score) {
-  if (score <= 4) return { level: "BAJO", cls: "low", color: "#22c55e", desc: "Protocolo estándar. Monitoreo habitual." };
-  if (score <= 9) return { level: "MODERADO", cls: "moderate", color: "#f59e0b", desc: "Monitoreo extendido. Equipo de emergencia preparado. Considerar ajuste de dosis/velocidad." };
-  return { level: "ALTO", cls: "high", color: "#ef4444", desc: "Riesgo significativo de evento adverso agudo. Considerar contraindicación relativa, diferir tratamiento, o modificar protocolo." };
+  if (score <= 4) return { level: "BAJO", cls: "low", color: "#22c55e", desc: "Protocolo estandar. Monitoreo habitual." };
+  if (score <= 9) return { level: "MODERADO", cls: "moderate", color: "#f59e0b", desc: "Monitoreo extendido. Equipo de emergencia preparado." };
+  return { level: "ALTO", cls: "high", color: "#ef4444", desc: "Riesgo significativo. Considerar diferir o modificar protocolo." };
 }
 
 function getScore() {
-  let score = 0;
-  ALL_SCORED.forEach(item => { if (state.selections[item.id]) score += item.points; });
-  return score;
+  var s = 0;
+  ALL_SCORED.forEach(function(i) { if (state.selections[i.id]) s += i.points; });
+  return s;
 }
 
-function hasContra() {
-  return Object.values(state.contraindications).some(Boolean);
-}
+function hasContra() { return Object.values(state.contraindications).some(Boolean); }
 
 function getBreakdown() {
-  const high = HIGH_WEIGHT.filter(i => state.selections[i.id]);
-  const mod = MODERATE_WEIGHT.filter(i => state.selections[i.id]);
-  const low = LOW_WEIGHT.filter(i => state.selections[i.id]);
-  const proc = PROCEDURE_MODIFIERS.filter(i => state.selections[i.id]);
-  return { high, mod, low, proc };
+  return {
+    high: HIGH_WEIGHT.filter(function(i) { return state.selections[i.id]; }),
+    mod: MODERATE_WEIGHT.filter(function(i) { return state.selections[i.id]; }),
+    low: LOW_WEIGHT.filter(function(i) { return state.selections[i.id]; }),
+    proc: PROCEDURE_MODIFIERS.filter(function(i) { return state.selections[i.id]; })
+  };
+}
+
+function getSelectedLabels() {
+  var labels = [];
+  if (hasContra()) labels.push("Cancer activo");
+  ALL_SCORED.forEach(function(i) { if (state.selections[i.id]) labels.push(i.label); });
+  return labels;
 }
 
 function getRecommendations(score, contra) {
   if (contra) return [
-    { icon: "⛔", text: "Paciente NO elegible para tratamiento con UC-MSC." },
-    { icon: "📋", text: "Documentar contraindicación en expediente clínico." },
-    { icon: "🔄", text: "Reevaluar si el estado oncológico cambia (remisión completa)." }
+    { icon: "X", text: "Paciente NO elegible para tratamiento con UC-MSC." },
+    { icon: ">", text: "Documentar contraindicacion en expediente clinico." },
+    { icon: ">", text: "Reevaluar si estado oncologico cambia." }
   ];
   if (score >= 10) return [
-    { icon: "🚨", text: "Considerar diferir tratamiento hasta optimización clínica." },
-    { icon: "🏥", text: "Si se procede: UCI o área de monitoreo avanzado disponible." },
-    { icon: "💉", text: "Considerar reducir dosis (≤100M IV) y velocidad de infusión lenta." },
-    { icon: "🫀", text: "Monitoreo cardiopulmonar continuo durante y post-infusión." },
-    { icon: "👨‍⚕️", text: "Evaluación por cardiología/neumología previo al tratamiento." },
-    { icon: "📋", text: "Consentimiento informado ampliado documentando riesgo elevado." }
+    { icon: "!", text: "Considerar diferir tratamiento hasta optimizacion clinica." },
+    { icon: ">", text: "Si se procede: monitoreo avanzado / UCI disponible." },
+    { icon: ">", text: "Reducir dosis (<=100M IV) y velocidad lenta." },
+    { icon: ">", text: "Monitoreo cardiopulmonar continuo." },
+    { icon: ">", text: "Evaluacion cardiologia/neumologia previa." },
+    { icon: ">", text: "Consentimiento informado ampliado." }
   ];
   if (score >= 5) return [
-    { icon: "⏱️", text: "Monitoreo extendido: mínimo 4 horas post-infusión." },
-    { icon: "🩺", text: "Signos vitales cada 15 min durante infusión, cada 30 min post." },
-    { icon: "💊", text: "Equipo de emergencia preparado y accesible." },
-    { icon: "💉", text: "Considerar velocidad de infusión reducida." },
-    { icon: "📞", text: "Seguimiento telefónico a las 24 y 48 horas." }
+    { icon: ">", text: "Monitoreo extendido: minimo 4h post-infusion." },
+    { icon: ">", text: "Signos vitales c/15min durante, c/30min post." },
+    { icon: ">", text: "Equipo de emergencia preparado." },
+    { icon: ">", text: "Velocidad de infusion reducida." },
+    { icon: ">", text: "Seguimiento 24 y 48 horas." }
   ];
   return [
-    { icon: "✅", text: "Protocolo estándar de infusión." },
-    { icon: "🩺", text: "Monitoreo habitual durante y 1 hora post-infusión." },
-    { icon: "📞", text: "Seguimiento estándar según protocolo de la clínica." }
+    { icon: ">", text: "Protocolo estandar." },
+    { icon: ">", text: "Monitoreo habitual 1h post." },
+    { icon: ">", text: "Seguimiento estandar." }
   ];
 }
 
-// ============ RENDER ============
-function render() {
-  const score = getScore();
-  const contra = hasContra();
-  const risk = getRiskInfo(score);
-  const bd = getBreakdown();
-  const selectedCount = Object.values(state.selections).filter(Boolean).length;
+function showToast(msg, isError) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (isError ? " error" : "");
+  setTimeout(function() { t.className = "toast"; }, 2500);
+}
 
-  let html = '';
+function saveToSheets() {
+  var url = getSheetsUrl();
+  if (!url) { showSetupModal(); return; }
+
+  state.saving = true;
+  render();
+
+  var score = getScore();
+  var contra = hasContra();
+  var risk = contra ? "CONTRAINDICADO" : getRiskInfo(score).level;
+  var bd = getBreakdown();
+  var now = new Date();
+
+  var payload = {
+    timestamp: now.toISOString(),
+    patient_id: state.patientId || "Sin ID",
+    score: contra ? "N/A" : score,
+    risk_level: risk,
+    contraindication: contra ? "Cancer activo" : "Ninguna",
+    high_weight: bd.high.map(function(i){return i.label}).join(", ") || "-",
+    moderate_weight: bd.mod.map(function(i){return i.label}).join(", ") || "-",
+    low_weight: bd.low.map(function(i){return i.label}).join(", ") || "-",
+    procedure: bd.proc.map(function(i){return i.label}).join(", ") || "-",
+    total_factors: getSelectedLabels().length
+  };
+
+  fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  }).then(function() {
+    var historyEntry = {
+      timestamp: payload.timestamp,
+      patient_id: payload.patient_id,
+      score: payload.score,
+      risk_level: payload.risk_level,
+      contraindication: payload.contraindication,
+      high_weight: payload.high_weight,
+      moderate_weight: payload.moderate_weight,
+      low_weight: payload.low_weight,
+      procedure: payload.procedure,
+      total_factors: payload.total_factors,
+      id: Date.now(),
+      date_display: now.toLocaleDateString("es-PA", { day:"2-digit", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" })
+    };
+    state.history.unshift(historyEntry);
+    if (state.history.length > 100) state.history = state.history.slice(0, 100);
+    localStorage.setItem("msc_history", JSON.stringify(state.history));
+    showToast("Guardado en Google Sheets");
+    state.saving = false;
+    render();
+  }).catch(function(err) {
+    showToast("Error al guardar - verificar URL", true);
+    console.error(err);
+    state.saving = false;
+    render();
+  });
+}
+
+function showSetupModal() {
+  var modal = document.getElementById("setupModal");
+  modal.className = "modal-overlay";
+  var currentUrl = getSheetsUrl();
+  modal.innerHTML = '<div class="modal">' +
+    '<h2>Configurar Google Sheets</h2>' +
+    '<p>Conecta tu hoja de calculo para guardar cada evaluacion.</p>' +
+    '<div class="setup-steps">' +
+      '<div class="setup-step"><span class="step-num">1</span><span>Crea un Google Sheet nuevo</span></div>' +
+      '<div class="setup-step"><span class="step-num">2</span><span>Ve a Extensiones > Apps Script</span></div>' +
+      '<div class="setup-step"><span class="step-num">3</span><span>Pega el codigo y haz Deploy > Web App (acceso: Anyone)</span></div>' +
+      '<div class="setup-step"><span class="step-num">4</span><span>Copia la URL del deploy y pegala aqui abajo</span></div>' +
+    '</div>' +
+    '<input type="url" id="sheetsUrlInput" placeholder="https://script.google.com/macros/s/..." value="' + currentUrl + '" />' +
+    '<div class="modal-btns">' +
+      '<button class="modal-btn ghost" onclick="hideSetupModal()">Cancelar</button>' +
+      '<button class="modal-btn primary" onclick="saveSheetsConfig()">Guardar</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function hideSetupModal() {
+  document.getElementById("setupModal").className = "modal-overlay hidden";
+}
+
+function saveSheetsConfig() {
+  var url = document.getElementById("sheetsUrlInput").value.trim();
+  if (url) {
+    setSheetsUrl(url);
+    showToast("Google Sheets configurado");
+  }
+  hideSetupModal();
+  render();
+}
+
+function render() {
+  var score = getScore();
+  var contra = hasContra();
+  var risk = getRiskInfo(score);
+  var bd = getBreakdown();
+  var selectedCount = Object.values(state.selections).filter(Boolean).length;
+  var sheetsConfigured = !!getSheetsUrl();
+
+  var html = "";
 
   // Header
-  html += `
-    <div class="header">
-      <div class="header-inner">
-        <div class="header-icon">⚕</div>
-        <div>
-          <h1>UC-MSC Risk Stratification</h1>
-          <div class="header-sub">Regeneration Clinic of Panama — v0.1</div>
-        </div>
-      </div>
-    </div>
-  `;
+  html += '<div class="header"><div class="header-inner">' +
+    '<div class="header-icon">&#9877;</div>' +
+    '<div style="flex:1"><h1>UC-MSC Risk Stratification</h1>' +
+    '<div class="header-sub">Regeneration Clinic - v0.1</div></div>' +
+    '<button class="settings-btn" onclick="showSetupModal()" title="Configurar">&#9881;</button>' +
+    '</div></div>';
 
   // Nav tabs
-  html += `
-    <div class="nav-tabs">
-      <button class="nav-tab ${state.activeTab === 'calculator' ? 'active' : ''}" onclick="setTab('calculator')">Calculadora</button>
-      <button class="nav-tab ${state.activeTab === 'results' ? 'active' : ''}" onclick="setTab('results')">Resultados</button>
-    </div>
-  `;
+  html += '<div class="nav-tabs">' +
+    '<button class="nav-tab ' + (state.activeTab==="calculator"?"active":"") + '" onclick="setTab(\'calculator\')">Calculadora</button>' +
+    '<button class="nav-tab ' + (state.activeTab==="results"?"active":"") + '" onclick="setTab(\'results\')">Resultados</button>' +
+    '<button class="nav-tab ' + (state.activeTab==="history"?"active":"") + '" onclick="setTab(\'history\')">Historial (' + state.history.length + ')</button>' +
+    '</div>';
 
   html += '<div class="content">';
 
-  // Risk Display (always visible)
+  // Risk display
   if (contra) {
-    html += `
-      <div class="risk-display contra">
-        <div class="contra-banner">
-          <div class="icon">⛔</div>
-          <div class="title">CONTRAINDICACIÓN ABSOLUTA</div>
-          <div class="desc">Paciente NO elegible para tratamiento con UC-MSC.</div>
-        </div>
-      </div>
-    `;
+    html += '<div class="risk-display contra"><div class="contra-banner">' +
+      '<div class="icon">&#9940;</div>' +
+      '<div class="title">CONTRAINDICACION ABSOLUTA</div>' +
+      '<div class="desc">Paciente NO elegible para tratamiento con UC-MSC.</div>' +
+      '</div></div>';
   } else {
-    html += `
-      <div class="risk-display ${risk.cls}">
-        <div class="risk-row">
-          <div>
-            <div class="risk-label">NIVEL DE RIESGO</div>
-            <div class="risk-level" style="color:${risk.color}">${risk.level}</div>
-            <div class="risk-desc">${risk.desc}</div>
-          </div>
-          <div style="text-align:center">
-            <div class="risk-score" style="color:${risk.color}">${score}</div>
-            <div class="risk-score-label">puntos</div>
-          </div>
-        </div>
-        ${selectedCount > 0 ? `
-        <div class="risk-breakdown">
-          ${bd.high.length ? `<span style="color:var(--red-light)">Alto: ${bd.high.length}×3 = ${bd.high.length*3}</span>` : ''}
-          ${bd.mod.length ? `<span style="color:var(--yellow-light)">Mod: ${bd.mod.length}×2 = ${bd.mod.length*2}</span>` : ''}
-          ${bd.low.length ? `<span style="color:var(--blue-light)">Bajo: ${bd.low.length}×1 = ${bd.low.length}</span>` : ''}
-          ${bd.proc.length ? `<span style="color:var(--purple-light)">Proc: ${bd.proc.reduce((s,i)=>s+i.points,0)}</span>` : ''}
-        </div>
-        ` : ''}
-      </div>
-    `;
+    html += '<div class="risk-display ' + risk.cls + '"><div class="risk-row"><div>' +
+      '<div class="risk-label">NIVEL DE RIESGO</div>' +
+      '<div class="risk-level" style="color:' + risk.color + '">' + risk.level + '</div>' +
+      '<div class="risk-desc">' + risk.desc + '</div></div>' +
+      '<div style="text-align:center"><div class="risk-score" style="color:' + risk.color + '">' + score + '</div>' +
+      '<div class="risk-score-label">puntos</div></div></div>';
+    if (selectedCount > 0) {
+      html += '<div class="risk-breakdown">';
+      if (bd.high.length) html += '<span style="color:var(--red-light)">Alto: ' + bd.high.length + 'x3=' + (bd.high.length*3) + '</span>';
+      if (bd.mod.length) html += '<span style="color:var(--yellow-light)">Mod: ' + bd.mod.length + 'x2=' + (bd.mod.length*2) + '</span>';
+      if (bd.low.length) html += '<span style="color:var(--blue-light)">Bajo: ' + bd.low.length + 'x1=' + bd.low.length + '</span>';
+      if (bd.proc.length) html += '<span style="color:var(--purple-light)">Proc: ' + bd.proc.reduce(function(s,i){return s+i.points},0) + '</span>';
+      html += '</div>';
+    }
+    html += '</div>';
   }
 
   // Scale bar
-  const sLow = !contra && score <= 4;
-  const sMod = !contra && score >= 5 && score <= 9;
-  const sHigh = !contra && score >= 10;
-  html += `
-    <div class="scale-bar">
-      <div class="scale-item ${sLow ? 'active-low' : ''}">
-        <div class="scale-label" style="color:${sLow ? 'var(--green)' : 'var(--text-dimmer)'}">BAJO</div>
-        <div class="scale-range">0-4</div>
-      </div>
-      <div class="scale-item ${sMod ? 'active-mod' : ''}">
-        <div class="scale-label" style="color:${sMod ? 'var(--yellow)' : 'var(--text-dimmer)'}">MODERADO</div>
-        <div class="scale-range">5-9</div>
-      </div>
-      <div class="scale-item ${sHigh ? 'active-high' : ''}">
-        <div class="scale-label" style="color:${sHigh ? 'var(--red)' : 'var(--text-dimmer)'}">ALTO</div>
-        <div class="scale-range">≥10</div>
-      </div>
-    </div>
-  `;
+  var sLow=!contra&&score<=4, sMod=!contra&&score>=5&&score<=9, sHigh=!contra&&score>=10;
+  html += '<div class="scale-bar">' +
+    '<div class="scale-item ' + (sLow?"active-low":"") + '"><div class="scale-label" style="color:' + (sLow?"var(--green)":"var(--text-dimmer)") + '">BAJO</div><div class="scale-range">0-4</div></div>' +
+    '<div class="scale-item ' + (sMod?"active-mod":"") + '"><div class="scale-label" style="color:' + (sMod?"var(--yellow)":"var(--text-dimmer)") + '">MODERADO</div><div class="scale-range">5-9</div></div>' +
+    '<div class="scale-item ' + (sHigh?"active-high":"") + '"><div class="scale-label" style="color:' + (sHigh?"var(--red)":"var(--text-dimmer)") + '">ALTO</div><div class="scale-range">&ge;10</div></div>' +
+    '</div>';
 
-  if (state.activeTab === 'calculator') {
-    // Test cases
-    html += `
-      <div class="test-section">
-        <div class="test-title">CASOS DE PRUEBA</div>
-        <div class="test-buttons">
-          ${TEST_CASES.map((tc, i) => `
-            <button class="test-btn ${state.activeTest === i ? 'active' : ''}" onclick="loadTest(${i})">${tc.name}</button>
-          `).join('')}
-          <button class="test-btn reset" onclick="resetAll()">Reset</button>
-        </div>
-        ${state.activeTest !== null ? `<div class="test-desc">${TEST_CASES[state.activeTest].desc}</div>` : ''}
-      </div>
-    `;
+  // CALCULATOR TAB
+  if (state.activeTab === "calculator") {
+    html += '<div class="patient-input-row"><label>ID Paciente:</label>' +
+      '<input class="patient-input" type="text" placeholder="Ej: RCP-001" value="' + state.patientId + '" oninput="state.patientId=this.value" /></div>';
 
-    // Contraindications
-    html += renderSection("Contraindicaciones Absolutas", "var(--red)", null, 
-      ABSOLUTE_CONTRAINDICATIONS.map(item => renderContraItem(item)).join('')
-    );
+    html += '<div class="test-section"><div class="test-title">CASOS DE PRUEBA</div><div class="test-buttons">';
+    TEST_CASES.forEach(function(tc, i) {
+      html += '<button class="test-btn ' + (state.activeTest===i?"active":"") + '" onclick="loadTest(' + i + ')">' + tc.name + '</button>';
+    });
+    html += '<button class="test-btn reset" onclick="resetAll()">Reset</button></div>';
+    if (state.activeTest !== null) html += '<div class="test-desc">' + TEST_CASES[state.activeTest].desc + '</div>';
+    html += '</div>';
 
-    // High weight
+    html += renderSection("Contraindicaciones Absolutas", "var(--red)", null,
+      ABSOLUTE_CONTRAINDICATIONS.map(function(i){ return renderContraItem(i); }).join(""));
     html += renderSection("Alto Peso", "var(--red)", "3 pts c/u",
-      HIGH_WEIGHT.map(item => renderCheckItem(item, "high")).join('')
-    );
-
-    // Moderate weight
+      HIGH_WEIGHT.map(function(i){ return renderCheckItem(i, "high"); }).join(""));
     html += renderSection("Peso Moderado", "var(--yellow)", "2 pts c/u",
-      MODERATE_WEIGHT.map(item => renderCheckItem(item, "mod")).join('')
-    );
-
-    // Low weight
+      MODERATE_WEIGHT.map(function(i){ return renderCheckItem(i, "mod"); }).join(""));
     html += renderSection("Peso Bajo", "var(--blue)", "1 pt c/u",
-      LOW_WEIGHT.map(item => renderCheckItem(item, "low")).join('')
-    );
-
-    // Procedure modifiers
+      LOW_WEIGHT.map(function(i){ return renderCheckItem(i, "low"); }).join(""));
     html += renderSection("Modificadores del Procedimiento", "var(--purple)", null,
-      PROCEDURE_MODIFIERS.map(item => renderCheckItem(item, "proc")).join('')
-    );
+      PROCEDURE_MODIFIERS.map(function(i){ return renderCheckItem(i, "proc"); }).join(""));
+  }
 
-  } else {
-    // Results tab
-    const recos = getRecommendations(score, contra);
-
-    // Selected factors summary
-    html += `<div class="result-card"><h3>Factores de Riesgo Identificados</h3>`;
-    if (contra) {
-      html += `<ul class="result-list"><li style="color:var(--red-light)">Cáncer activo — Contraindicación absoluta</li></ul>`;
-    }
+  // RESULTS TAB
+  if (state.activeTab === "results") {
+    var recos = getRecommendations(score, contra);
+    html += '<div class="result-card"><h3>Factores de Riesgo Identificados</h3>';
+    if (contra) html += '<ul class="result-list"><li style="color:var(--red-light)">Cancer activo - Contraindicacion absoluta</li></ul>';
     if (bd.high.length) {
-      html += `<div style="font-size:11px;color:var(--red-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">ALTO PESO (3 pts)</div>`;
-      html += `<ul class="result-list">${bd.high.map(i => `<li>${i.label}</li>`).join('')}</ul>`;
+      html += '<div style="font-size:11px;color:var(--red-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">ALTO PESO (3 pts)</div><ul class="result-list">';
+      bd.high.forEach(function(i){ html += '<li>' + i.label + '</li>'; });
+      html += '</ul>';
     }
     if (bd.mod.length) {
-      html += `<div style="font-size:11px;color:var(--yellow-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">PESO MODERADO (2 pts)</div>`;
-      html += `<ul class="result-list">${bd.mod.map(i => `<li>${i.label}</li>`).join('')}</ul>`;
+      html += '<div style="font-size:11px;color:var(--yellow-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">PESO MODERADO (2 pts)</div><ul class="result-list">';
+      bd.mod.forEach(function(i){ html += '<li>' + i.label + '</li>'; });
+      html += '</ul>';
     }
     if (bd.low.length) {
-      html += `<div style="font-size:11px;color:var(--blue-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">PESO BAJO (1 pt)</div>`;
-      html += `<ul class="result-list">${bd.low.map(i => `<li>${i.label}</li>`).join('')}</ul>`;
+      html += '<div style="font-size:11px;color:var(--blue-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">PESO BAJO (1 pt)</div><ul class="result-list">';
+      bd.low.forEach(function(i){ html += '<li>' + i.label + '</li>'; });
+      html += '</ul>';
     }
     if (bd.proc.length) {
-      html += `<div style="font-size:11px;color:var(--purple-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">PROCEDIMIENTO</div>`;
-      html += `<ul class="result-list">${bd.proc.map(i => `<li>${i.label} (+${i.points})</li>`).join('')}</ul>`;
+      html += '<div style="font-size:11px;color:var(--purple-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">PROCEDIMIENTO</div><ul class="result-list">';
+      bd.proc.forEach(function(i){ html += '<li>' + i.label + ' (+' + i.points + ')</li>'; });
+      html += '</ul>';
     }
-    if (!contra && selectedCount === 0) {
-      html += `<div class="result-empty">No se han seleccionado factores de riesgo.</div>`;
-    }
-    html += `</div>`;
+    if (!contra && selectedCount===0) html += '<div class="result-empty">No se han seleccionado factores de riesgo.</div>';
+    html += '</div>';
+    html += '<div class="reco-box"><div class="reco-title">Recomendaciones Clinicas</div>';
+    recos.forEach(function(r){ html += '<div class="reco-item"><span>' + r.icon + '</span><span>' + r.text + '</span></div>'; });
+    html += '</div>';
+  }
 
-    // Recommendations
-    html += `
-      <div class="reco-box">
-        <div class="reco-title">Recomendaciones Clínicas</div>
-        ${recos.map(r => `<div class="reco-item"><span class="reco-bullet">${r.icon}</span><span>${r.text}</span></div>`).join('')}
-      </div>
-    `;
+  // HISTORY TAB
+  if (state.activeTab === "history") {
+    if (state.history.length === 0) {
+      html += '<div class="history-empty">No hay evaluaciones guardadas aun.<br><span style="font-size:12px">Usa "Guardar" en la calculadora para registrar.</span></div>';
+    } else {
+      state.history.forEach(function(h) {
+        var badgeCls = h.risk_level==="CONTRAINDICADO"?"contra":h.risk_level==="ALTO"?"high":h.risk_level==="MODERADO"?"moderate":"low";
+        html += '<div class="history-item"><div class="history-header">' +
+          '<span class="history-id">' + h.patient_id + '</span>' +
+          '<span class="history-badge ' + badgeCls + '">' + h.risk_level + (h.score!=="N/A"?" - "+h.score+"pts":"") + '</span>' +
+          '</div><div class="history-date">' + h.date_display + '</div>' +
+          '<div class="history-factors">';
+        if (h.high_weight !== "-") html += '<span style="color:var(--red-light)">' + h.high_weight + '</span>';
+        if (h.moderate_weight !== "-") html += (h.high_weight!=="-"?" | ":"") + '<span style="color:var(--yellow-light)">' + h.moderate_weight + '</span>';
+        if (h.low_weight !== "-") html += ((h.high_weight!=="-"||h.moderate_weight!=="-")?" | ":"") + '<span style="color:var(--blue-light)">' + h.low_weight + '</span>';
+        html += '</div></div>';
+      });
+      html += '<button onclick="clearHistory()" style="width:100%;padding:12px;border-radius:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:var(--red-light);font-size:13px;font-weight:600;cursor:pointer;margin-top:12px;font-family:var(--font);">Limpiar historial local</button>';
+    }
   }
 
   // Footer
-  html += `
-    <div class="footer">
-      <p>UC-MSC Risk Stratification Calculator v0.1 Beta<br>
-      Regeneration Clinic of Panama<br>
-      Solo para uso clínico interno — Requiere validación prospectiva</p>
-    </div>
-  `;
+  html += '<div class="footer"><p>UC-MSC Risk Stratification Calculator v0.1 Beta<br>Regeneration Clinic of Panama<br>Solo para uso clinico interno</p></div>';
+  html += '</div>';
 
-  html += '</div>'; // content
+  // Save bar
+  if (state.activeTab !== "history") {
+    html += '<div class="save-bar">' +
+      '<button class="save-btn primary" onclick="saveToSheets()" ' + (state.saving?"disabled":"") + '>';
+    if (state.saving) {
+      html += '<span class="spinner"></span> Guardando...';
+    } else if (sheetsConfigured) {
+      html += 'Guardar evaluacion';
+    } else {
+      html += 'Configurar Google Sheets';
+    }
+    html += '</button>' +
+      '<button class="save-btn secondary" onclick="resetAll()">&#8634;</button></div>';
+  }
 
-  // Install banner for iOS Safari
-  html += `
-    <div class="install-banner ${isInstalled() ? 'hidden' : ''}" id="installBanner">
-      <div class="install-text">
-        <strong>Instalar como App</strong>
-        <span>Toca Compartir → "Añadir a inicio"</span>
-      </div>
-      <button class="install-dismiss" onclick="dismissInstall()">✕</button>
-    </div>
-  `;
-
-  document.getElementById('app').innerHTML = html;
+  document.getElementById("app").innerHTML = html;
 }
 
 function renderSection(title, color, pts, content) {
-  return `
-    <div class="section">
-      <div class="section-header">
-        <div class="section-bar" style="background:${color}"></div>
-        <span class="section-title">${title}</span>
-        ${pts ? `<span class="section-pts">(${pts})</span>` : ''}
-      </div>
-      ${content}
-    </div>
-  `;
+  return '<div class="section"><div class="section-header">' +
+    '<div class="section-bar" style="background:' + color + '"></div>' +
+    '<span class="section-title">' + title + '</span>' +
+    (pts ? '<span class="section-pts">(' + pts + ')</span>' : '') +
+    '</div>' + content + '</div>';
 }
 
 function renderCheckItem(item, tier) {
-  const checked = !!state.selections[item.id];
-  return `
-    <div class="check-item ${checked ? 'checked' : ''}" onclick="toggle('${item.id}')">
-      <div class="check-box ${checked ? tier : 'unchecked'}">${checked ? '✓' : ''}</div>
-      <span class="check-label">${item.label}</span>
-      <span class="check-pts ${tier}">+${item.points}</span>
-    </div>
-  `;
+  var checked = !!state.selections[item.id];
+  return '<div class="check-item ' + (checked?"checked":"") + '" onclick="toggle(\'' + item.id + '\')">' +
+    '<div class="check-box ' + (checked?tier:"unchecked") + '">' + (checked?"&#10003;":"") + '</div>' +
+    '<span class="check-label">' + item.label + '</span>' +
+    '<span class="check-pts ' + tier + '">+' + item.points + '</span></div>';
 }
 
 function renderContraItem(item) {
-  const checked = !!state.contraindications[item.id];
-  return `
-    <div class="contra-item ${checked ? 'checked' : ''}" onclick="toggleContra('${item.id}')">
-      <div class="contra-circle ${checked ? 'checked' : 'unchecked'}">${checked ? '✕' : ''}</div>
-      <span class="contra-label">${item.label}</span>
-      <span class="contra-badge">STOP</span>
-    </div>
-  `;
+  var checked = !!state.contraindications[item.id];
+  return '<div class="contra-item ' + (checked?"checked":"") + '" onclick="toggleContra(\'' + item.id + '\')">' +
+    '<div class="contra-circle ' + (checked?"checked":"unchecked") + '">' + (checked?"&#10005;":"") + '</div>' +
+    '<span class="contra-label">' + item.label + '</span>' +
+    '<span class="contra-badge">STOP</span></div>';
 }
 
-// ============ ACTIONS ============
-function toggle(id) {
-  state.selections[id] = !state.selections[id];
-  state.activeTest = null;
-  render();
-}
+function toggle(id) { state.selections[id]=!state.selections[id]; state.activeTest=null; render(); }
+function toggleContra(id) { state.contraindications[id]=!state.contraindications[id]; state.activeTest=null; render(); }
+function setTab(tab) { state.activeTab=tab; render(); window.scrollTo({top:0,behavior:"smooth"}); }
+function loadTest(idx) { state.selections=JSON.parse(JSON.stringify(TEST_CASES[idx].selections)); state.contraindications={}; state.activeTest=idx; render(); }
+function resetAll() { state.selections={}; state.contraindications={}; state.activeTest=null; state.patientId=""; render(); }
+function clearHistory() { if(confirm("Limpiar historial local?")){ state.history=[]; localStorage.removeItem("msc_history"); render(); } }
 
-function toggleContra(id) {
-  state.contraindications[id] = !state.contraindications[id];
-  state.activeTest = null;
-  render();
-}
-
-function setTab(tab) {
-  state.activeTab = tab;
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function loadTest(idx) {
-  state.selections = { ...TEST_CASES[idx].selections };
-  state.contraindications = {};
-  state.activeTest = idx;
-  render();
-}
-
-function resetAll() {
-  state.selections = {};
-  state.contraindications = {};
-  state.activeTest = null;
-  render();
-}
-
-function isInstalled() {
-  return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches || localStorage.getItem('installDismissed');
-}
-
-function dismissInstall() {
-  localStorage.setItem('installDismissed', '1');
-  document.getElementById('installBanner').classList.add('hidden');
-}
-
-// ============ INIT ============
 render();
 </script>
 </body>
