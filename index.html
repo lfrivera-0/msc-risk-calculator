@@ -418,8 +418,15 @@ var state = {
 };
 
 var SHEETS_URL_KEY = "msc_sheets_url";
-function getSheetsUrl() { return localStorage.getItem(SHEETS_URL_KEY) || ""; }
-function setSheetsUrl(url) { localStorage.setItem(SHEETS_URL_KEY, url); }
+
+// ✅ Production default (everyone saves to the same sheet)
+var DEFAULT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbytTT_frbJbQ5cnm8_qGnGtiCiEXndGBYppa0w4lGFFRHBCZUz5U2AeHODDxsb7QJqt/exec";
+
+function getSheetsUrl() {
+  // Allow override via Settings for admins, but default works for everyone
+  return localStorage.getItem(SHEETS_URL_KEY) || DEFAULT_SHEETS_URL;
+}
+
 
 function getRiskInfo(score) {
   if (score <= 4) return { level: "BAJO", cls: "low", color: "#22c55e", desc: "Protocolo estandar. Monitoreo habitual." };
@@ -750,8 +757,6 @@ function render() {
       html += '<span class="spinner"></span> Guardando...';
     } else if (sheetsConfigured) {
       html += 'Guardar evaluacion';
-    } else {
-      html += 'Configurar Google Sheets';
     }
     html += '</button>' +
       '<button class="save-btn secondary" onclick="resetAll()">&#8634;</button></div>';
