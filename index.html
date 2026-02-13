@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  
+
   :root {
     --bg: #0a0a0b;
     --surface: rgba(255,255,255,0.02);
@@ -37,7 +37,7 @@
   }
 
   html { background: var(--bg); }
-  
+
   body {
     font-family: var(--font);
     background: var(--bg);
@@ -101,7 +101,7 @@
   .risk-desc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; line-height: 1.5; }
   .risk-score { font-size: 44px; font-weight: 700; font-family: var(--mono); line-height: 1; }
   .risk-score-label { font-size: 10px; color: var(--text-dimmer); font-family: var(--mono); text-align: center; }
-  
+
   .risk-breakdown {
     margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border);
     display: flex; gap: 14px; flex-wrap: wrap; font-size: 11px; font-family: var(--mono);
@@ -138,7 +138,7 @@
   }
   .check-item:active { transform: scale(0.98); }
   .check-item.checked { background: rgba(255,255,255,0.06); border-color: var(--border-active); }
-  
+
   .check-box {
     width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
@@ -149,9 +149,9 @@
   .check-box.mod { background: var(--yellow); }
   .check-box.low { background: var(--blue); }
   .check-box.proc { background: var(--purple); }
-  
+
   .check-label { color: var(--text); font-size: 14px; line-height: 1.4; flex: 1; }
-  
+
   .check-pts {
     font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; font-family: var(--mono); flex-shrink: 0;
   }
@@ -352,6 +352,9 @@
 <div class="modal-overlay hidden" id="setupModal"></div>
 
 <script>
+/* -------------------------
+   Risk model configuration
+-------------------------- */
 var ABSOLUTE_CONTRAINDICATIONS = [
   { id: "cancer", label: "Cancer activo" }
 ];
@@ -407,6 +410,9 @@ var TEST_CASES = [
   { name: "Wellness", desc: "Mujer 38 anos, sana, wellness. IV 150M.", selections: { route_iv:true } }
 ];
 
+/* -------------------------
+   App state + Sheets config
+-------------------------- */
 var state = {
   selections: {},
   contraindications: {},
@@ -426,8 +432,13 @@ function getSheetsUrl() {
   // Allow override via Settings for admins, but default works for everyone
   return localStorage.getItem(SHEETS_URL_KEY) || DEFAULT_SHEETS_URL;
 }
+function setSheetsUrl(url) {
+  localStorage.setItem(SHEETS_URL_KEY, url);
+}
 
-
+/* -------------------------
+   Scoring helpers
+-------------------------- */
 function getRiskInfo(score) {
   if (score <= 4) return { level: "BAJO", cls: "low", color: "#22c55e", desc: "Protocolo estandar. Monitoreo habitual." };
   if (score <= 9) return { level: "MODERADO", cls: "moderate", color: "#f59e0b", desc: "Monitoreo extendido. Equipo de emergencia preparado." };
@@ -486,6 +497,9 @@ function getRecommendations(score, contra) {
   ];
 }
 
+/* -------------------------
+   UI helpers
+-------------------------- */
 function showToast(msg, isError) {
   var t = document.getElementById("toast");
   t.textContent = msg;
@@ -493,6 +507,9 @@ function showToast(msg, isError) {
   setTimeout(function() { t.className = "toast"; }, 2500);
 }
 
+/* -------------------------
+   Save to Sheets
+-------------------------- */
 function saveToSheets() {
   var url = getSheetsUrl();
   if (!url) { showSetupModal(); return; }
@@ -564,7 +581,7 @@ function saveToSheets() {
     clearTimeout(timeout);
     var msg = (err && err.name === "AbortError")
       ? "Timeout al guardar (verificar conexion/URL)"
-      : ("Error al guardar: " + err.message);
+      : ("Error al guardar: " + (err && err.message ? err.message : "desconocido"));
     showToast(msg, true);
     console.error(err);
     state.saving = false;
@@ -572,6 +589,9 @@ function saveToSheets() {
   });
 }
 
+/* -------------------------
+   Setup modal
+-------------------------- */
 function showSetupModal() {
   var modal = document.getElementById("setupModal");
   modal.className = "modal-overlay";
@@ -581,8 +601,8 @@ function showSetupModal() {
     '<p>Conecta tu hoja de calculo para guardar cada evaluacion.</p>' +
     '<div class="setup-steps">' +
       '<div class="setup-step"><span class="step-num">1</span><span>Crea un Google Sheet nuevo</span></div>' +
-      '<div class="setup-step"><span class="step-num">2</span><span>Ve a Extensiones > Apps Script</span></div>' +
-      '<div class="setup-step"><span class="step-num">3</span><span>Pega el codigo y haz Deploy > Web App (acceso: Anyone)</span></div>' +
+      '<div class="setup-step"><span class="step-num">2</span><span>Ve a Extensiones &gt; Apps Script</span></div>' +
+      '<div class="setup-step"><span class="step-num">3</span><span>Pega el codigo y haz Deploy &gt; Web App (acceso: Anyone)</span></div>' +
       '<div class="setup-step"><span class="step-num">4</span><span>Copia la URL del deploy y pegala aqui abajo</span></div>' +
     '</div>' +
     '<input type="url" id="sheetsUrlInput" placeholder="https://script.google.com/macros/s/..." value="' + currentUrl + '" />' +
@@ -607,13 +627,15 @@ function saveSheetsConfig() {
   render();
 }
 
+/* -------------------------
+   Render
+-------------------------- */
 function render() {
   var score = getScore();
   var contra = hasContra();
   var risk = getRiskInfo(score);
   var bd = getBreakdown();
   var selectedCount = Object.values(state.selections).filter(Boolean).length;
-  var sheetsConfigured = !!getSheetsUrl();
 
   var html = "";
 
@@ -648,6 +670,7 @@ function render() {
       '<div class="risk-desc">' + risk.desc + '</div></div>' +
       '<div style="text-align:center"><div class="risk-score" style="color:' + risk.color + '">' + score + '</div>' +
       '<div class="risk-score-label">puntos</div></div></div>';
+
     if (selectedCount > 0) {
       html += '<div class="risk-breakdown">';
       if (bd.high.length) html += '<span style="color:var(--red-light)">Alto: ' + bd.high.length + 'x3=' + (bd.high.length*3) + '</span>';
@@ -697,6 +720,7 @@ function render() {
     var recos = getRecommendations(score, contra);
     html += '<div class="result-card"><h3>Factores de Riesgo Identificados</h3>';
     if (contra) html += '<ul class="result-list"><li style="color:var(--red-light)">Cancer activo - Contraindicacion absoluta</li></ul>';
+
     if (bd.high.length) {
       html += '<div style="font-size:11px;color:var(--red-light);font-family:var(--mono);margin:8px 0 4px;font-weight:700">ALTO PESO (3 pts)</div><ul class="result-list">';
       bd.high.forEach(function(i){ html += '<li>' + i.label + '</li>'; });
@@ -719,6 +743,7 @@ function render() {
     }
     if (!contra && selectedCount===0) html += '<div class="result-empty">No se han seleccionado factores de riesgo.</div>';
     html += '</div>';
+
     html += '<div class="reco-box"><div class="reco-title">Recomendaciones Clinicas</div>';
     recos.forEach(function(r){ html += '<div class="reco-item"><span>' + r.icon + '</span><span>' + r.text + '</span></div>'; });
     html += '</div>';
@@ -741,6 +766,7 @@ function render() {
         if (h.low_weight !== "-") html += ((h.high_weight!=="-"||h.moderate_weight!=="-")?" | ":"") + '<span style="color:var(--blue-light)">' + h.low_weight + '</span>';
         html += '</div></div>';
       });
+
       html += '<button onclick="clearHistory()" style="width:100%;padding:12px;border-radius:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:var(--red-light);font-size:13px;font-weight:600;cursor:pointer;margin-top:12px;font-family:var(--font);">Limpiar historial local</button>';
     }
   }
@@ -749,22 +775,28 @@ function render() {
   html += '<div class="footer"><p>UC-MSC Risk Stratification Calculator v0.1 Beta<br>Regeneration Clinic of Panama<br>Solo para uso clinico interno</p></div>';
   html += '</div>';
 
-  // Save bar
+  // Save bar (PRODUCTION LABEL ALWAYS)
   if (state.activeTab !== "history") {
     html += '<div class="save-bar">' +
-      '<button class="save-btn primary" onclick="saveToSheets()" ' + (state.saving?"disabled":"") + '>';
-  if (state.saving) {
-  html += '<span class="spinner"></span> Guardando...';
-} else {
-  html += 'Guardar evaluacion';
-}
-html += '</button>' +
-  '<button class="save-btn secondary" onclick="resetAll()">&#8634;</button></div>';
+      '<button class="save-btn primary" onclick="saveToSheets()" ' + (state.saving ? "disabled" : "") + '>';
 
+    if (state.saving) {
+      html += '<span class="spinner"></span> Guardando...';
+    } else {
+      html += 'Guardar evaluacion';
+    }
+
+    html += '</button>' +
+      '<button class="save-btn secondary" onclick="resetAll()">&#8634;</button>' +
+      '</div>';
+  }
 
   document.getElementById("app").innerHTML = html;
 }
 
+/* -------------------------
+   Render components + actions
+-------------------------- */
 function renderSection(title, color, pts, content) {
   return '<div class="section"><div class="section-header">' +
     '<div class="section-bar" style="background:' + color + '"></div>' +
@@ -796,6 +828,7 @@ function loadTest(idx) { state.selections=JSON.parse(JSON.stringify(TEST_CASES[i
 function resetAll() { state.selections={}; state.contraindications={}; state.activeTest=null; state.patientId=""; render(); }
 function clearHistory() { if(confirm("Limpiar historial local?")){ state.history=[]; localStorage.removeItem("msc_history"); render(); } }
 
+// Initial render
 render();
 </script>
 </body>
