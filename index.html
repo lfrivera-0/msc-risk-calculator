@@ -753,14 +753,14 @@ function render() {
   if (state.activeTab !== "history") {
     html += '<div class="save-bar">' +
       '<button class="save-btn primary" onclick="saveToSheets()" ' + (state.saving?"disabled":"") + '>';
-    if (state.saving) {
-      html += '<span class="spinner"></span> Guardando...';
-    } else if (sheetsConfigured) {
-      html += 'Guardar evaluacion';
-    }
-    html += '</button>' +
-      '<button class="save-btn secondary" onclick="resetAll()">&#8634;</button></div>';
-  }
+  if (state.saving) {
+  html += '<span class="spinner"></span> Guardando...';
+} else {
+  html += 'Guardar evaluacion';
+}
+html += '</button>' +
+  '<button class="save-btn secondary" onclick="resetAll()">&#8634;</button></div>';
+
 
   document.getElementById("app").innerHTML = html;
 }
